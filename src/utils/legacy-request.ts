@@ -111,9 +111,13 @@ const serialize = (params: Record<string, any>): string =>
 /** 无请求体的方法，约定参数只能走 query */
 const BODYLESS_METHODS = ['get', 'head', 'delete'];
 
+/** 老系统接口基地址：开发走 vite 代理（老系统未开 CORS），生产用 .env 配置，为空则同源 */
+export const LEGACY_BASE_URL = import.meta.env.DEV
+  ? '/legacy-api'
+  : import.meta.env.VITE_LEGACY_BASE_URL || '';
+
 const legacyHttp = axios.create({
-  // 开发环境走 vite 代理（老系统未开启 CORS）；生产使用 .env 配置的完整地址，为空则同源
-  baseURL: import.meta.env.DEV ? '/legacy-api' : import.meta.env.VITE_LEGACY_BASE_URL || '',
+  baseURL: LEGACY_BASE_URL,
   timeout: 60000,
   // sessionId 走参数传递，不依赖 Cookie；
   // 若后端改为依赖 Cookie，这里要给 true，且后端需放行 Cookie 与预检请求
@@ -230,7 +234,7 @@ export const legacyGet = <T = unknown>(
 
 export const legacyPost = <T = unknown>(
   url: string,
-  data?: Record<string, any>,
+  data?: Record<string, any> | FormData,
   config?: AxiosRequestConfig
 ) => legacyHttp.post<T>(url, data, config);
 

@@ -3,7 +3,11 @@ import { pluginsList } from './config';
 import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
-  const { VITE_PORT, VITE_BASE } = loadEnv(mode, process.cwd());
+  const { VITE_PORT, VITE_BASE, VITE_LEGACY_BASE_URL, LEGACY_COOKIE } = loadEnv(
+    mode,
+    process.cwd(),
+    ['VITE_', 'LEGACY_']
+  );
 
   return {
     base: VITE_BASE,
@@ -43,7 +47,24 @@ export default defineConfig(({ mode }) => {
       // 端口号（这里使用了变量 VITE_PORT）
       port: Number(VITE_PORT),
       // 本地跨域代理-> 代理到服务器的接口地址
-      proxy: {},
+      proxy: {
+        // 老系统（aisports-web）未开启 CORS，开发环境统一走本地代理
+        '/legacy-api': {
+          target: VITE_LEGACY_BASE_URL,
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/legacy-api/, ''),
+          // 老系统鉴权依赖 SESSION Cookie，浏览器不会把 webtest 域的 Cookie 带到 localhost，
+          // 这里从 .env 注入一份（仅本地开发用，值需自行从 DevTools 复制）
+          configure: proxy => {
+            proxy.on('proxyReq', proxyReq => {
+              // 保留浏览器发往 localhost 的 Cookie，再叠加 .env 注入的那份
+              const incoming = proxyReq.getHeader('cookie');
+              const cookie = [LEGACY_COOKIE, incoming].filter(Boolean).join('; ');
+              if (cookie) proxyReq.setHeader('cookie', cookie);
+            });
+          }
+        }
+      },
       // 预热文件以降低启动期间的初始页面加载时长
       warmup: {
         // 预热的客户端文件：首页、views、 components
