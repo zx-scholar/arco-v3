@@ -13,13 +13,15 @@
     "build": "rimraf dist && vite build",
     "preview": "vite preview",
     "type:check": "tsc --noEmit && vue-tsc --noEmit --skipLibCheck",
-    "eslint": "eslint --max-warnings 0 \"{src,mock,config}/**/*.{vue,js,ts,tsx}\"",
-    "eslint:fix": "eslint --max-warnings 0 \"{src,mock,config}/**/*.{vue,js,ts,tsx}\" --fix",
+    "eslint": "eslint \"{src,mock,config}/**/*.{vue,js,ts,tsx}\"",
+    "eslint:fix": "eslint \"{src,mock,config}/**/*.{vue,js,ts,tsx}\" --fix",
+    "eslint:ci": "eslint --max-warnings 0 \"{src,mock,config}/**/*.{vue,js,ts,tsx}\"",
     "stylelint": "stylelint \"**/*.{html,vue,css,less}\"",
     "stylelint:fix": "stylelint \"**/*.{html,vue,css,less}\" --fix",
     "prettier": "prettier --check \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
     "prettier:fix": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
     "lint": "pnpm eslint && pnpm stylelint && pnpm prettier",
+    "lint:ci": "pnpm eslint:ci && pnpm stylelint && pnpm prettier",
     "lint:fix": "pnpm eslint:fix && pnpm stylelint:fix && pnpm prettier:fix",
     "lint-staged": "npx lint-staged",
     "clean:cache": "rimraf .eslintcache && rimraf node_modules && pnpm install",
@@ -50,9 +52,6 @@
       "prettier --write"
     ],
     "package.json": [
-      "prettier --write"
-    ],
-    "*.md": [
       "prettier --write"
     ]
   },

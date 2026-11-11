@@ -109,16 +109,7 @@ export default [
     },
     rules: {
       ...prettier.rules,
-      'prettier/prettier': [
-        'warn',
-        {
-          endOfLine: 'auto',
-          singleQuote: true,
-          semi: true,
-          trailingComma: 'none',
-          bracketSpacing: true
-        }
-      ],
+      'prettier/prettier': 'warn',
       'no-console': 'error',
       'no-debugger': 'off',
       'no-unused-vars': 'off',

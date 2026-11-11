@@ -19,5 +19,7 @@ export default {
   // 箭头函数参数括号
   arrowParens: 'avoid',
   // jsx 中使用单引号
-  jsxSingleQuote: true
+  jsxSingleQuote: true,
+  // 行尾风格跟随文件现状，兼容 Windows(CRLF) 与 mac/linux(LF)
+  endOfLine: 'auto'
 };
