@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: "npm" # 包管理器
+    directory: "/"
+    schedule:
+      interval: "monthly" # 每月运行一次
+    reviewers:
+      - "oljc"
+    assignees:
+      - "oljc"
+    labels:
+      - "🔩 dependencies"
+    open-pull-requests-limit: 6 # 一次最多打开 6 个 PR
+    ignore:
+      - dependency-name: "pnpm" # 忽略 pnpm 本身的更新
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        patterns:
+          - '*'
+    pull-request-branch-name:
+      separator: "-" # 分隔符
+    commit-message:
+      prefix: "build"
+      prefix-development: "build"
+      include: "scope"
+  # Action更新
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "🪛 actions"
